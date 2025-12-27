@@ -117,7 +117,7 @@ graph TB
         ClientPi[Client Pi<br/>Raspberry Pi #1<br/>Runs client_example.py]
     end
     
-    subgraph "Network"
+    subgraph "Network SubGraph"
         Network[WiFi/Ethernet<br/>TCP/IP]
     end
     
