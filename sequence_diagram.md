@@ -5,16 +5,14 @@
 ```mermaid
 sequenceDiagram
     participant User/Robot
-    participant ClientPi as Client Pi<br/>(Command Sender)
-    participant LiftService as Lift Control Service<br/>(Flask API)
+    participant ClientPi as Robot RMR (ESP)<br/>(Command Sender)
+    participant RobotMainController as Robot Main Controller
+    participant CameraModule as Camera Module<br/><b>Raspberry Pi</b>
+    participant LiftService as Panel RMR (ESP)<br/>(Flask API)
     participant LiftHardware as Lift Hardware<br/>(Physical Mechanism)
 
-    Note over User/Robot,LiftHardware: Initialization & Health Check
-    User/Robot->>ClientPi: Request to send floor command
-    ClientPi->>LiftService: GET /health
-    LiftService-->>ClientPi: {status: "healthy", timestamp}
-    
     Note over User/Robot,LiftHardware: Floor Command Flow
+    User/Robot->>ClientPi: Request to send floor command
     ClientPi->>LiftService: POST /api/floor<br/>{floor: 5}
     LiftService->>LiftService: Validate floor number
     LiftService->>LiftService: Update lift_state<br/>(target_floor, status)
@@ -44,8 +42,10 @@ sequenceDiagram
 
 ```mermaid
 sequenceDiagram
-    participant ClientPi as Client Pi
-    participant LiftService as Lift Control Service
+    participant ClientPi as Robot RMR (ESP)
+    participant RobotMainController as Robot Main Controller
+    participant CameraModule as Camera Module<br/><b>Raspberry Pi</b>
+    participant LiftService as Panel RMR (ESP)
 
     Note over ClientPi,LiftService: Invalid Floor Command
     ClientPi->>LiftService: POST /api/floor<br/>{floor: "invalid"}
@@ -68,7 +68,9 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     participant User as User/Robot
-    participant ClientPi as Client Pi<br/>(Raspberry Pi #1)
+    participant ClientPi as Robot RMR (ESP)<br/>(Raspberry Pi #1)
+    participant RobotMainController as Robot Main Controller
+    participant CameraModule as Camera Module<br/><b>Raspberry Pi</b>
     participant Network as Network<br/>(WiFi/Ethernet)
     participant LiftPi as Lift Control Pi<br/>(Raspberry Pi #2)
     participant LiftService as Flask API<br/>(Port 5000)
@@ -114,16 +116,16 @@ graph TB
     end
     
     subgraph "Client Side"
-        ClientPi[Client Pi<br/>Raspberry Pi #1<br/>Runs client_example.py]
+        ClientPi[Robot RMR (ESP)<br/>Raspberry Pi #1<br/>Runs client_example.py]
     end
     
-    subgraph "Network SubGraph"
+    subgraph "Network Subgraph"
         Network[WiFi/Ethernet<br/>TCP/IP]
     end
     
     subgraph "Lift Control Side"
         LiftPi[Lift Control Pi<br/>Raspberry Pi #2<br/>In Lift Panel]
-        LiftService[Flask API Service<br/>app.py<br/>Port 5000]
+        LiftService[Panel RMR (ESP)<br/>Flask API<br/>app.py<br/>Port 5000]
         LiftState[(Lift State<br/>In-Memory)]
     end
     
