@@ -13,16 +13,16 @@ sequenceDiagram
 
     Note over User/Robot,LiftHardware: Floor Command Flow
     User/Robot->>ClientPi: Request to send floor command
-    ClientPi->>LiftService: POST /api/floor<br/>{floor: 5}
+    ClientPi->>LiftService: POST /api/floor<br/>{floor: 5}<br/>(via LoRa)
     LiftService->>LiftService: Validate floor number
     LiftService->>LiftService: Update lift_state<br/>(target_floor, status)
-    LiftService-->>ClientPi: {status: "success",<br/>target_floor: 5,<br/>lift_status: "moving_up"}
+    LiftService-->>ClientPi: {status: "success",<br/>target_floor: 5,<br/>lift_status: "moving_up"}<br/>(via LoRa)
     ClientPi-->>User/Robot: Command acknowledged
     
     Note over User/Robot,LiftHardware: Status Monitoring
     User/Robot->>ClientPi: Check lift status
-    ClientPi->>LiftService: GET /api/status
-    LiftService-->>ClientPi: {current_floor: 0,<br/>target_floor: 5,<br/>status: "moving_up"}
+    ClientPi->>LiftService: GET /api/status<br/>(via LoRa)
+    LiftService-->>ClientPi: {current_floor: 0,<br/>target_floor: 5,<br/>status: "moving_up"}<br/>(via LoRa)
     ClientPi-->>User/Robot: Status update
     
     Note over User/Robot,LiftHardware: Lift Movement & Arrival
@@ -33,8 +33,8 @@ sequenceDiagram
     
     Note over User/Robot,LiftHardware: Final Status Check
     User/Robot->>ClientPi: Check if arrived
-    ClientPi->>LiftService: GET /api/status
-    LiftService-->>ClientPi: {current_floor: 5,<br/>target_floor: null,<br/>status: "arrived"}
+    ClientPi->>LiftService: GET /api/status<br/>(via LoRa)
+    LiftService-->>ClientPi: {current_floor: 5,<br/>target_floor: null,<br/>status: "arrived"}<br/>(via LoRa)
     ClientPi-->>User/Robot: Lift arrived at floor 5
 ```
 
@@ -116,7 +116,7 @@ graph TB
     end
     
     subgraph "Client Side"
-        ClientPi[Robot RMR (ESP) Runs client_example.py]
+        ClientPi[Robot RMR / ESP - Runs client_example.py]
     end
     
     subgraph "Network Subgraph"
