@@ -64,7 +64,7 @@ graph TB
     
     subgraph "Lift Control Side"
         LiftPi[Lift Control Pi<br/>Raspberry Pi #2<br/>In Lift Panel]
-        LiftService[Panel RMR (ESP)<br/>app.py<br/>Port 5000]
+        LiftService[Panel RMR - ESP <br/>app.py<br/>Port 5000]
         LiftState[(Lift State<br/>In-Memory)]
     end
     
