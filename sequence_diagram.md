@@ -7,7 +7,7 @@ sequenceDiagram
     participant User/Robot
     participant ClientPi as Robot RMR (ESP)<br/>(Command Sender)
     participant RobotMainController as Robot Main Controller
-    participant CameraModule as Camera Module<br/><b>Raspberry Pi</b>
+    participant CameraModule as Camera Module<br/>Raspberry Pi
     participant LiftService as Panel RMR (ESP)<br/>(Flask API)
     participant LiftHardware as Lift Hardware<br/>(Physical Mechanism)
 
@@ -44,7 +44,7 @@ sequenceDiagram
 sequenceDiagram
     participant ClientPi as Robot RMR (ESP)
     participant RobotMainController as Robot Main Controller
-    participant CameraModule as Camera Module<br/><b>Raspberry Pi</b>
+    participant CameraModule as Camera Module<br/>Raspberry Pi
     participant LiftService as Panel RMR (ESP)
 
     Note over ClientPi,LiftService: Invalid Floor Command
@@ -70,7 +70,7 @@ sequenceDiagram
     participant User as User/Robot
     participant ClientPi as Robot RMR (ESP)<br/>(Raspberry Pi #1)
     participant RobotMainController as Robot Main Controller
-    participant CameraModule as Camera Module<br/><b>Raspberry Pi</b>
+    participant CameraModule as Camera Module<br/>Raspberry Pi
     participant Network as Network<br/>(WiFi/Ethernet)
     participant LiftPi as Lift Control Pi<br/>(Raspberry Pi #2)
     participant LiftService as Flask API<br/>(Port 5000)
@@ -116,7 +116,7 @@ graph TB
     end
     
     subgraph "Client Side"
-        ClientPi[Robot RMR (ESP)<br/>Raspberry Pi #1<br/>Runs client_example.py]
+        ClientPi[Robot RMR (ESP) Runs client_example.py]
     end
     
     subgraph "Network Subgraph"
