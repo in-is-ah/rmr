@@ -13,7 +13,10 @@ sequenceDiagram
 
     Note over User,LiftHardware: Floor Command Flow
     User->>ClientPi: Go to Floor 5
-    ClientPi->>RobotMainController: Go to Floor 5
+    loop Polling Loop
+        RobotMainController->>ClientPi: GET /api/pending-command
+        ClientPi-->>RobotMainController: {floor: 5} or null
+    end
     ClientPi->>LiftService: Go to Floor 5<br/>(via LoRa)
     LiftService->>LiftService: Validate floor number
     LiftService->>LiftService: Update lift_state<br/>(target_floor, status)
@@ -37,31 +40,6 @@ sequenceDiagram
     ClientPi->>LiftService: GET /api/status<br/>(via LoRa)
     LiftService-->>ClientPi: {current_floor: 5,<br/>target_floor: null,<br/>status: "arrived"}<br/>(via LoRa)
     ClientPi-->>User: Lift arrived at floor 5
-```
-
-## Error Handling Flow
-
-```mermaid
-sequenceDiagram
-    participant ClientPi as Robot RMR (ESP)
-    participant RobotMainController as Robot Main Controller
-    participant CameraModule as Robot Camera<br/>Raspberry Pi
-    participant LiftService as Panel RMR (ESP)
-
-    Note over ClientPi,LiftService: Invalid Floor Command
-    ClientPi->>LiftService: POST /api/floor<br/>{floor: "invalid"}
-    LiftService->>LiftService: Validate floor (fails)
-    LiftService-->>ClientPi: 400 {error: "Floor must be an integer"}
-    
-    Note over ClientPi,LiftService: Missing Floor Field
-    ClientPi->>LiftService: POST /api/floor<br/>{}
-    LiftService->>LiftService: Check for floor field (missing)
-    LiftService-->>ClientPi: 400 {error: "Missing 'floor' field"}
-    
-    Note over ClientPi,LiftService: Service Unavailable
-    ClientPi->>LiftService: POST /api/floor<br/>{floor: 3}
-    LiftService-->>ClientPi: Connection timeout/error
-    ClientPi->>ClientPi: Handle error, retry or notify user
 ```
 
 ## Component Interaction Overview
