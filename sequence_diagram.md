@@ -28,17 +28,14 @@ sequenceDiagram
     RobotMainController-->>ClientPi: Positioned
     ClientPi->>LiftService: Go to Floor 3, pick up and go to Floor 5<br/>(via LoRa)
     LiftService-->>ClientPi: Command acknowledged
-    LiftService->>LiftService: Validate floor number
-    LiftService->>LiftService: Update lift_state<br/>(target_floor, status)
 
     
     Note over User,LiftHardware: Robot's Status Monitoring
-    User->>ClientPi: Check lift status
-    ClientPi->>LiftService: GET /api/status<br/>(via LoRa)
-    LiftService-->>ClientPi: {current_floor: 0,<br/>target_floor: 5,<br/>status: "moving_up"}<br/>(via LoRa)
-    ClientPi-->>User: Status update
+    CameraModule->>CameraModule: Check if the Lift door is opened
     
     Note over User,LiftHardware: Lift Movement & Arrival
+    LiftService->>LiftService: Validate floor number
+    LiftService->>LiftService: Update lift_state<br/>(target_floor, status)
     LiftHardware->>LiftHardware: Move lift to floor 5
     LiftHardware->>LiftService: POST /api/arrived<br/>{floor: 5}
     LiftService->>LiftService: Update lift_state<br/>(current_floor: 5,<br/>status: "arrived")
