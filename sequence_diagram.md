@@ -9,9 +9,9 @@ graph TB
     end
     
     subgraph "Robot Side"
-        RobotRMR[Robot RMR - ESP<br/>WiFi router & LoRa device<br/>Port 5000]
+        RobotRMR[Robot RMR - ESP<br/>WiFi router & LoRa device]
         RobotMainController[Robot Main Controller<br/>Polls for commands]
-        RobotCamera[Robot Camera<br/>Raspberry Pi<br/>Port 5001]
+        RobotCamera[Robot Camera<br/>Raspberry Pi]
     end
     
     subgraph "Lift Control Side"
@@ -21,7 +21,7 @@ graph TB
     
     User -->|Commands| RobotRMR
     RobotMainController -->|WiFi<br/>GET floor commands<br/>POST robot position - lift<br/>GET lift arrival status| RobotRMR
-    RobotMainController <-->|ROS or REST<br/>Position commands| RobotCamera
+    RobotMainController <-->|WiFi<br/>ROS or REST<br/>Position commands| RobotCamera
     RobotRMR -->|LoRa<br/>Floor commands<br/>Robot entry/exit status| PanelRMR
     PanelRMR -->|LoRa<br/>Current floor updates<br/>Command acknowledgments| RobotRMR
     PanelRMR <-->|Mechanical hand<br/>GPIO/Serial<br/>Actuator control| LiftHardware
