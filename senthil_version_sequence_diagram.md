@@ -46,7 +46,7 @@ sequenceDiagram
     ClientPi-->>User: Lift arrived at floor 5
 ```
 
-## Component Interaction Overview (Block Diagram)
+## Component Interaction Overview - Block Diagram
 
 ```mermaid
 graph TB
@@ -55,13 +55,13 @@ graph TB
     end
     
     subgraph "Robot Side"
-        RobotRMR[Robot RMR (ESP)<br/>WiFi router & LoRa device<br/>Port 5000]
+        RobotRMR[Robot RMR - ESP<br/>WiFi router & LoRa device<br/>Port 5000]
         RobotMainController[Robot Main Controller<br/>Polls for commands]
         RobotCamera[Robot Camera<br/>Raspberry Pi<br/>Port 5001]
     end
     
     subgraph "Lift Control Side"
-        PanelRMR[Panel RMR (ESP)<br/>app.py<br/>Port 5000]
+        PanelRMR[Panel RMR - ESP<br/>app.py<br/>Port 5000]
         LiftHardware[Lift Hardware<br/>Physical Mechanism<br/>Motors, Sensors]
     end
     
