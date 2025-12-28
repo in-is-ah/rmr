@@ -12,12 +12,13 @@ sequenceDiagram
     participant LiftHardware as Lift Hardware<br/>(Physical Mechanism)
 
     Note over User,LiftHardware: Floor Command Flow
-    User->>ClientPi: Go to Floor 5
+    User->>ClientPi: You need to go to Floor 5
     loop Polling Loop
         RobotMainController->>ClientPi: GET /api/pending-command<br/>(via WiFi)
         ClientPi-->>RobotMainController: {floor: 5} or null
     end
-    RobotMainController->>RobotMainController: Instruct Robot to go to<br/>Robot Waiting Zone
+    RobotMainController->>RobotMainController: Assess current location<br/>(Floor 3)
+    RobotMainController->>RobotMainController: Move to Floor 3<br/>Robot Waiting Zone
     ClientPi->>LiftService: Go to Floor 5<br/>(via LoRa)
     LiftService->>LiftService: Validate floor number
     LiftService->>LiftService: Update lift_state<br/>(target_floor, status)
