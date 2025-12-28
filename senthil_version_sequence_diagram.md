@@ -61,7 +61,7 @@ graph TB
     end
     
     subgraph "Lift Control Side"
-        PanelRMR[Panel RMR - ESP<br/>app.py<br/>Port 5000]
+        PanelRMR[Panel RMR - ESP]
         LiftHardware[Lift Hardware<br/>Physical Mechanism<br/>Motors, Sensors]
     end
     
@@ -73,4 +73,3 @@ graph TB
     PanelRMR <-->|Mechanical hand<br/>GPIO/Serial| LiftHardware
     LiftHardware -->|Arrival Notification| PanelRMR
 ```
-
