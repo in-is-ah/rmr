@@ -65,15 +65,6 @@ graph TB
         LiftHardware[Lift Hardware<br/>Physical Mechanism<br/>Motors, Sensors]
     end
     
-    subgraph "Questions / Notes"
-        Q1["Q1: Within the 3 components of the Robot - RMR - ESP, Main Controller and Camera module - who communicates to what? In what direction? What tech to use? More detailed questions are coming next."]
-        Q2["Q2: Main controller talks to both RMR and Camera. But the RMR and Camera does not talk directly. Please confirm."]
-        Q3["Q3: Main controller GETs and POSTs to the RMR through the REST endpoint that is provided by RMR. Please confirm."]
-        Q4["Q4: How do the Main controller and Camera communicate? What wireless technology? Is it thru WiFi hosted by the RMR? What SW application protocol is used - ROS or REST?"]
-        Q5["Q5: Main controller is another Raspberry Pi?"]
-        Q6["Q6: What scope should we aim to complete here?"]
-    end
-    
     User -->|Commands| RobotRMR
     RobotMainController -->|WiFi<br/>GET /api/pending-command| RobotRMR
     RobotMainController -->|WiFi<br/>POST /api/positioned| RobotRMR
@@ -82,3 +73,18 @@ graph TB
     PanelRMR <-->|Mechanical hand<br/>GPIO/Serial| LiftHardware
     LiftHardware -->|Arrival Notification| PanelRMR
 ```
+
+## Questions / Notes
+
+```mermaid
+graph TB
+    subgraph "Architecture Questions"
+        Q1["Q1: Within the 3 components of the Robot - RMR - ESP, Main Controller and Camera module - who communicates to what? In what direction? What tech to use? More detailed questions are coming next."]
+        Q2["Q2: Main controller talks to both RMR and Camera. But the RMR and Camera does not talk directly. Please confirm."]
+        Q3["Q3: Main controller GETs and POSTs to the RMR through the REST endpoint that is provided by RMR. Please confirm."]
+        Q4["Q4: How do the Main controller and Camera communicate? What wireless technology? Is it thru WiFi hosted by the RMR? What SW application protocol is used - ROS or REST?"]
+        Q5["Q5: Main controller is another Raspberry Pi?"]
+        Q6["Q6: What scope should we aim to complete here?"]
+    end
+```
+
