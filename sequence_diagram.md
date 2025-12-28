@@ -34,20 +34,40 @@ sequenceDiagram
     LiftHardware->>LiftHardware: Move lift to floor 3
     LiftHardware->>LiftHardware: Door Open
     LiftService->>LiftService: Determines floor reached<br/>(via accelerometer)
-    LiftService->>ClientPi: Update lift state<br/>current floor: 3
+    LiftService->>ClientPi: Current floor: 3
     ClientPi->>RobotMainController: Lift arrived
     RobotMainController->>RobotMainController: Move inside lift
     Note over RobotMainController,CameraModule: Robot & Camera work together<br/>to position inside lift
     RobotMainController->>CameraModule: Position inside lift<br/>(via ROS or REST ?)
     activate CameraModule
-    CameraModule->>CameraModule: Detect robot position<br/>& go to right position inside of lift
+    CameraModule->>CameraModule: Detect robot position<br/>& go to right position inside lift
     CameraModule-->>RobotMainController: Positioned
     deactivate CameraModule
     RobotMainController-->>ClientPi: Positioned
     ClientPi->>LiftService: Robot fully entered
     LiftService-->ClientPi: Command acknowledged
-    LiftService->>LiftHardware: Click 'Door Close' button (using actuator)
+    LiftService->>LiftHardware: Click 'Door Close' button<br/>(using actuator)
 
+    Note over User,LiftHardware: Lift Movement & Arrival to Floor 5
+    LiftService->>LiftHardware: Click 'Floor 5' button<br/>(using actuator)
+    LiftHardware->>LiftHardware: Move lift to floor 5
+    LiftHardware->>LiftHardware: Door Open
+    LiftService->>LiftService: Determines floor reached<br/>(via accelerometer)
+    LiftService->>ClientPi: Current floor: 5
+    ClientPi->>RobotMainController: Lift arrived
+    RobotMainController->>RobotMainController: Move outside lift
+    Note over RobotMainController,CameraModule: Robot & Camera work together<br/>to position outside lift
+    RobotMainController->>CameraModule: Position outside lift<br/>(via ROS or REST ?)
+    activate CameraModule
+    CameraModule->>CameraModule: Detect robot position<br/>& go to right position outside lift
+    CameraModule-->>RobotMainController: Positioned
+    deactivate CameraModule
+    RobotMainController-->>ClientPi: Positioned
+    ClientPi->>LiftService: Robot fully exited
+    LiftService-->ClientPi: Command acknowledged
+    LiftService->>LiftHardware: Click 'Door Close' button<br/>(using actuator)
+    
+    Note over User,LiftHardware: Cycle Ended
     
 ```
 
