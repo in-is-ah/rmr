@@ -10,7 +10,7 @@ graph TB
     
     subgraph "Robot Side"
         RobotRMR[Robot RMR - ESP<br/>WiFi router & LoRa device]
-        RobotMainController[Robot Main Controller<br/>Polls for commands]
+        RobotMainController[Robot Main Controller<br/>coordinates with RMR & Camera]
         RobotCamera[Robot Camera<br/>Raspberry Pi]
     end
     
