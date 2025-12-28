@@ -30,6 +30,7 @@ sequenceDiagram
     LiftService-->>ClientPi: Command acknowledged
     
     Note over User,LiftHardware: Lift Movement & Arrival
+    LiftService->>LiftHardware: Instruct thru Mechanical hand
     LiftHardware->>LiftHardware: Move lift to floor 3
     LiftHardware->>LiftService: POST /api/arrived<br/>{floor: 5}
     LiftService->>LiftService: Update lift_state<br/>(current_floor: 5,<br/>status: "arrived")
