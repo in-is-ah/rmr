@@ -19,15 +19,20 @@ sequenceDiagram
     end
     RobotMainController->>RobotMainController: Re-confirm current location<br/>(Floor 3)
     RobotMainController->>RobotMainController: Move to Floor 3<br/>Robot Waiting Zone
+    Note over RobotMainController,CameraModule: Robot & Camera work together<br/>to position before lift
     RobotMainController->>CameraModule: Position before lift<br/>(via ROS or REST ?)
+    activate CameraModule
+    CameraModule->>CameraModule: Detect robot position<br/>& guide to waiting zone
     CameraModule-->>RobotMainController: Positioned
+    deactivate CameraModule
     RobotMainController-->>ClientPi: Positioned
     ClientPi->>LiftService: Go to Floor 3, pick up and go to Floor 5<br/>(via LoRa)
+    LiftService-->>ClientPi: Command acknowledged
     LiftService->>LiftService: Validate floor number
     LiftService->>LiftService: Update lift_state<br/>(target_floor, status)
-    LiftService-->>ClientPi: Command acknowledged
+
     
-    Note over User,LiftHardware: Status Monitoring
+    Note over User,LiftHardware: Robot's Status Monitoring
     User->>ClientPi: Check lift status
     ClientPi->>LiftService: GET /api/status<br/>(via LoRa)
     LiftService-->>ClientPi: {current_floor: 0,<br/>target_floor: 5,<br/>status: "moving_up"}<br/>(via LoRa)
