@@ -19,11 +19,10 @@ sequenceDiagram
     end
     RobotMainController->>RobotMainController: Re-confirm current location<br/>(Floor 3)
     RobotMainController->>RobotMainController: Move to Floor 3<br/>Robot Waiting Zone
-    ClientPi->>LiftService: Go to Floor 3<br/>(via LoRa)
+    ClientPi->>LiftService: Go to Floor 3, pick up and go to Floor 5<br/>(via LoRa)
     LiftService->>LiftService: Validate floor number
     LiftService->>LiftService: Update lift_state<br/>(target_floor, status)
-    LiftService-->>ClientPi: {status: "success",<br/>target_floor: 5,<br/>lift_status: "moving_up"}<br/>(via LoRa)
-    ClientPi-->>User: Command acknowledged
+    LiftService-->>ClientPi: Command acknowledged
     
     Note over User,LiftHardware: Status Monitoring
     User->>ClientPi: Check lift status
