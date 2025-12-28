@@ -34,7 +34,7 @@ sequenceDiagram
     LiftHardware->>LiftHardware: Move lift to floor 3
     LiftHardware->>LiftHardware: Door Open
     LiftService->>LiftService: Determines floor reached<br/>(via accelerometer)
-    Lift Service->ClientPi: Update lift state<br/>current floor: 3
+    LiftService->ClientPi: Update lift state<br/>current floor: 3
     ClientPi->>RobotMainController: Lift arrived<br/>Door Open
     RobotMainController->>RobotMainController: Move inside lift
     Note over RobotMainController,CameraModule: Robot & Camera work together<br/>to position inside lift
