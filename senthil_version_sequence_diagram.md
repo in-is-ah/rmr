@@ -91,10 +91,10 @@ graph TB
     end
     
     User -->|Commands| RobotRMR
-    RobotMainController -->|WiFi<br/>GET /api/pending-command| RobotRMR
-    RobotMainController -->|WiFi<br/>POST /api/positioned| RobotRMR
+    RobotMainController -->|WiFi<br/>GET floor commands<br/>POST robot position - lift<br/>GET lift arrival status| RobotRMR
     RobotMainController <-->|ROS or REST<br/>Position commands| RobotCamera
-    RobotRMR <-->|LoRa<br/>Floor commands| PanelRMR
-    PanelRMR <-->|Mechanical hand<br/>GPIO/Serial| LiftHardware
+    RobotRMR -->|LoRa<br/>Floor commands<br/>Robot entry/exit status| PanelRMR
+    PanelRMR -->|LoRa<br/>Current floor updates<br/>Command acknowledgments| RobotRMR
+    PanelRMR <-->|Mechanical hand<br/>GPIO/Serial<br/>Actuator control| LiftHardware
     LiftHardware -->|Arrival Notification| PanelRMR
 ```
