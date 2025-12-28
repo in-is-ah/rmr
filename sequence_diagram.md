@@ -12,7 +12,7 @@ sequenceDiagram
     participant LiftHardware as Lift Hardware<br/>(Physical Mechanism)
 
     Note over User,LiftHardware: Floor Command Flow
-    User->>ClientPi: You are in Floor 3, you need to go to Floor 5
+    User->>ClientPi: You are in Floor 3,<br/>you need to go to Floor 5
     loop Polling Loop
         RobotMainController->>ClientPi: GET /api/pending-command<br/>(via WiFi)
         ClientPi-->>RobotMainController: {current: 3, target: 5} or null
