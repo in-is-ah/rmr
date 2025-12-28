@@ -26,24 +26,49 @@ sequenceDiagram
     CameraModule-->>RobotMainController: Positioned
     deactivate CameraModule
     RobotMainController-->>ClientPi: Positioned
-    ClientPi->>LiftService: Go to Floor 3, pick up and go to Floor 5<br/>(via LoRa)
+    ClientPi->>LiftService: "Go to Floor 3, pick up and go to Floor 5"<br/>(via LoRa)
     LiftService-->>ClientPi: Command acknowledged
     
-    Note over User,LiftHardware: Lift Movement & Arrival
-    LiftService->>LiftHardware: Instruct thru Mechanical hand
+    Note over User,LiftHardware: Lift Movement & Arrival to Floor 3
+    LiftService->>LiftHardware: Click 'Floor 3' button<br/>(using actuator)
     LiftHardware->>LiftHardware: Move lift to floor 3
-    LiftHardware->>LiftService: POST /api/arrived<br/>{floor: 5}
-    LiftService->>LiftService: Update lift_state<br/>(current_floor: 5,<br/>status: "arrived")
-    LiftService-->>LiftHardware: {status: "success",<br/>current_floor: 5}
-    
-    Note over User,LiftHardware: Robot's Status Monitoring
-    CameraModule->>CameraModule: Check if the Lift door is opened
+    LiftHardware->>LiftHardware: Door Open
+    LiftService->>LiftService: Determines floor reached<br/>(via accelerometer)
+    LiftService->>ClientPi: Current floor: 3
+    ClientPi->>RobotMainController: Lift arrived
+    RobotMainController->>RobotMainController: Move inside lift
+    Note over RobotMainController,CameraModule: Robot & Camera work together<br/>to position inside lift
+    RobotMainController->>CameraModule: Position inside lift<br/>(via ROS or REST ?)
+    activate CameraModule
+    CameraModule->>CameraModule: Detect robot position<br/>& go to right position inside lift
+    CameraModule-->>RobotMainController: Positioned
+    deactivate CameraModule
+    RobotMainController-->>ClientPi: Positioned
+    ClientPi->>LiftService: Robot fully entered
+    LiftService-->ClientPi: Command acknowledged
+    LiftService->>LiftHardware: Click 'Door Close' button<br/>(using actuator)
 
-    Note over User,LiftHardware: Final Status Check
-    User->>ClientPi: Check if arrived
-    ClientPi->>LiftService: GET /api/status<br/>(via LoRa)
-    LiftService-->>ClientPi: {current_floor: 5,<br/>target_floor: null,<br/>status: "arrived"}<br/>(via LoRa)
-    ClientPi-->>User: Lift arrived at floor 5
+    Note over User,LiftHardware: Lift Movement & Arrival to Floor 5
+    LiftService->>LiftHardware: Click 'Floor 5' button<br/>(using actuator)
+    LiftHardware->>LiftHardware: Move lift to floor 5
+    LiftHardware->>LiftHardware: Door Open
+    LiftService->>LiftService: Determines floor reached<br/>(via accelerometer)
+    LiftService->>ClientPi: Current floor: 5
+    ClientPi->>RobotMainController: Lift arrived
+    RobotMainController->>RobotMainController: Move outside lift
+    Note over RobotMainController,CameraModule: Robot & Camera work together<br/>to position outside lift
+    RobotMainController->>CameraModule: Position outside lift<br/>(via ROS or REST ?)
+    activate CameraModule
+    CameraModule->>CameraModule: Detect robot position<br/>& go to right position outside lift
+    CameraModule-->>RobotMainController: Positioned
+    deactivate CameraModule
+    RobotMainController-->>ClientPi: Positioned
+    ClientPi->>LiftService: Robot fully exited
+    LiftService-->ClientPi: Command acknowledged
+    LiftService->>LiftHardware: Click 'Door Close' button<br/>(using actuator)
+    
+    Note over User,LiftHardware: Cycle Ended
+    
 ```
 
 ## Component Interaction Overview - Block Diagram
@@ -73,4 +98,3 @@ graph TB
     PanelRMR <-->|Mechanical hand<br/>GPIO/Serial| LiftHardware
     LiftHardware -->|Arrival Notification| PanelRMR
 ```
-
