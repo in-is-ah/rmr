@@ -5,15 +5,16 @@
 ```mermaid
 sequenceDiagram
     participant User
-    participant ClientPi as Robot RMR (ESP)<br/>(Command Sender)
+    participant ClientPi as Robot RMR (ESP)<br/>(WiFi router & LoRa device)
     participant RobotMainController as Robot Main Controller
     participant CameraModule as Robot Camera<br/>Raspberry Pi
     participant LiftService as Panel RMR (ESP)
     participant LiftHardware as Lift Hardware<br/>(Physical Mechanism)
 
     Note over User,LiftHardware: Floor Command Flow
-    User->>ClientPi: Request to send floor command
-    ClientPi->>LiftService: POST /api/floor<br/>{floor: 5}<br/>(via LoRa)
+    User->>ClientPi: Go to Floor 5
+    ClientPi->>RobotMainController: Go to Floor 5
+    ClientPi->>LiftService: Go to Floor 5<br/>(via LoRa)
     LiftService->>LiftService: Validate floor number
     LiftService->>LiftService: Update lift_state<br/>(target_floor, status)
     LiftService-->>ClientPi: {status: "success",<br/>target_floor: 5,<br/>lift_status: "moving_up"}<br/>(via LoRa)
