@@ -66,8 +66,8 @@ graph TB
     end
     
     User -->|Commands| RobotRMR
-    RobotMainController <-->|WiFi<br/>GET /api/pending-command| RobotRMR
-    RobotMainController <-->|WiFi<br/>POST /api/positioned| RobotRMR
+    RobotMainController -->|WiFi<br/>GET /api/pending-command| RobotRMR
+    RobotMainController -->|WiFi<br/>POST /api/positioned| RobotRMR
     RobotMainController <-->|ROS or REST<br/>Position commands| RobotCamera
     RobotRMR <-->|LoRa<br/>Floor commands| PanelRMR
     PanelRMR <-->|Mechanical hand<br/>GPIO/Serial| LiftHardware
