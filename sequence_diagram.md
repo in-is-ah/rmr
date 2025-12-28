@@ -4,38 +4,38 @@
 
 ```mermaid
 sequenceDiagram
-    participant User/Robot
+    participant User
     participant ClientPi as Robot RMR (ESP)<br/>(Command Sender)
     participant RobotMainController as Robot Main Controller
-    participant CameraModule as Camera Module<br/>Raspberry Pi
-    participant LiftService as Panel RMR (ESP)<br/>(Flask API)
+    participant CameraModule as Robot Camera<br/>Raspberry Pi
+    participant LiftService as Panel RMR (ESP)
     participant LiftHardware as Lift Hardware<br/>(Physical Mechanism)
 
-    Note over User/Robot,LiftHardware: Floor Command Flow
-    User/Robot->>ClientPi: Request to send floor command
+    Note over User,LiftHardware: Floor Command Flow
+    User->>ClientPi: Request to send floor command
     ClientPi->>LiftService: POST /api/floor<br/>{floor: 5}<br/>(via LoRa)
     LiftService->>LiftService: Validate floor number
     LiftService->>LiftService: Update lift_state<br/>(target_floor, status)
     LiftService-->>ClientPi: {status: "success",<br/>target_floor: 5,<br/>lift_status: "moving_up"}<br/>(via LoRa)
-    ClientPi-->>User/Robot: Command acknowledged
+    ClientPi-->>User: Command acknowledged
     
-    Note over User/Robot,LiftHardware: Status Monitoring
-    User/Robot->>ClientPi: Check lift status
+    Note over User,LiftHardware: Status Monitoring
+    User->>ClientPi: Check lift status
     ClientPi->>LiftService: GET /api/status<br/>(via LoRa)
     LiftService-->>ClientPi: {current_floor: 0,<br/>target_floor: 5,<br/>status: "moving_up"}<br/>(via LoRa)
-    ClientPi-->>User/Robot: Status update
+    ClientPi-->>User: Status update
     
-    Note over User/Robot,LiftHardware: Lift Movement & Arrival
+    Note over User,LiftHardware: Lift Movement & Arrival
     LiftHardware->>LiftHardware: Move lift to floor 5
     LiftHardware->>LiftService: POST /api/arrived<br/>{floor: 5}
     LiftService->>LiftService: Update lift_state<br/>(current_floor: 5,<br/>status: "arrived")
     LiftService-->>LiftHardware: {status: "success",<br/>current_floor: 5}
     
-    Note over User/Robot,LiftHardware: Final Status Check
-    User/Robot->>ClientPi: Check if arrived
+    Note over User,LiftHardware: Final Status Check
+    User->>ClientPi: Check if arrived
     ClientPi->>LiftService: GET /api/status<br/>(via LoRa)
     LiftService-->>ClientPi: {current_floor: 5,<br/>target_floor: null,<br/>status: "arrived"}<br/>(via LoRa)
-    ClientPi-->>User/Robot: Lift arrived at floor 5
+    ClientPi-->>User: Lift arrived at floor 5
 ```
 
 ## Error Handling Flow
@@ -44,7 +44,7 @@ sequenceDiagram
 sequenceDiagram
     participant ClientPi as Robot RMR (ESP)
     participant RobotMainController as Robot Main Controller
-    participant CameraModule as Camera Module<br/>Raspberry Pi
+    participant CameraModule as Robot Camera<br/>Raspberry Pi
     participant LiftService as Panel RMR (ESP)
 
     Note over ClientPi,LiftService: Invalid Floor Command
@@ -63,56 +63,12 @@ sequenceDiagram
     ClientPi->>ClientPi: Handle error, retry or notify user
 ```
 
-## Complete System Architecture
-
-```mermaid
-sequenceDiagram
-    participant User as User/Robot
-    participant ClientPi as Robot RMR (ESP)<br/>(Raspberry Pi #1)
-    participant RobotMainController as Robot Main Controller
-    participant CameraModule as Camera Module<br/>Raspberry Pi
-    participant Network as Network<br/>(WiFi/Ethernet)
-    participant LiftPi as Lift Control Pi<br/>(Raspberry Pi #2)
-    participant LiftService as Flask API<br/>(Port 5000)
-    participant LiftHardware as Lift Hardware<br/>(In Lift Panel)
-
-    Note over User,LiftHardware: System Startup
-    LiftPi->>LiftService: Start Flask service<br/>(host: 0.0.0.0, port: 5000)
-    LiftService->>LiftService: Initialize lift_state<br/>(current_floor: 0, status: idle)
-    
-    Note over User,LiftHardware: Command Request Flow
-    User->>ClientPi: "Go to floor 5"
-    ClientPi->>Network: HTTP POST /api/floor<br/>{floor: 5}
-    Network->>LiftPi: Forward request
-    LiftPi->>LiftService: Process floor command
-    LiftService->>LiftService: Validate & update state
-    LiftService->>Network: HTTP 200 Response
-    Network->>ClientPi: Return success
-    ClientPi->>User: "Command accepted"
-    
-    Note over User,LiftHardware: Physical Movement
-    LiftService->>LiftHardware: Signal to move<br/>(via GPIO/Serial/etc)
-    LiftHardware->>LiftHardware: Move lift to floor 5
-    LiftHardware->>LiftService: POST /api/arrived<br/>{floor: 5}
-    LiftService->>LiftService: Update current_floor = 5
-    LiftService->>LiftHardware: Acknowledge arrival
-    
-    Note over User,LiftHardware: Status Query
-    User->>ClientPi: "What's the status?"
-    ClientPi->>Network: HTTP GET /api/status
-    Network->>LiftPi: Forward request
-    LiftPi->>LiftService: Get current state
-    LiftService->>Network: Return status JSON
-    Network->>ClientPi: Status response
-    ClientPi->>User: "Lift at floor 5, idle"
-```
-
 ## Component Interaction Overview
 
 ```mermaid
 graph TB
     subgraph "External"
-        User[User/Robot]
+        User[User]
     end
     
     subgraph "Client Side"
@@ -125,7 +81,7 @@ graph TB
     
     subgraph "Lift Control Side"
         LiftPi[Lift Control Pi<br/>Raspberry Pi #2<br/>In Lift Panel]
-        LiftService[Panel RMR (ESP)<br/>Flask API<br/>app.py<br/>Port 5000]
+        LiftService[Panel RMR (ESP)<br/>app.py<br/>Port 5000]
         LiftState[(Lift State<br/>In-Memory)]
     end
     
