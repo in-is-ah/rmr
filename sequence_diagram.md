@@ -17,6 +17,7 @@ sequenceDiagram
         RobotMainController->>ClientPi: GET /api/pending-command<br/>(via WiFi)
         ClientPi-->>RobotMainController: {floor: 5} or null
     end
+    RobotMainController->>RobotMainController: Instruct Robot to go to<br/>Robot Waiting Zone
     ClientPi->>LiftService: Go to Floor 5<br/>(via LoRa)
     LiftService->>LiftService: Validate floor number
     LiftService->>LiftService: Update lift_state<br/>(target_floor, status)
