@@ -14,7 +14,7 @@ sequenceDiagram
     Note over User,LiftHardware: Floor Command Flow
     User->>ClientPi: Go to Floor 5
     loop Polling Loop
-        RobotMainController->>ClientPi: GET /api/pending-command
+        RobotMainController->>ClientPi: GET /api/pending-command<br/>(via WiFi)
         ClientPi-->>RobotMainController: {floor: 5} or null
     end
     ClientPi->>LiftService: Go to Floor 5<br/>(via LoRa)
