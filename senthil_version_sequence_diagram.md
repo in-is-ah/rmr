@@ -1,6 +1,6 @@
-# Lift Control System - Sequence Diagram
+# Lift Control System - Block & Sequence Diagram
 
-## Main Flow: Sending Floor Command
+## Main Flow Sequence Diagram
 
 ```mermaid
 sequenceDiagram
@@ -46,7 +46,7 @@ sequenceDiagram
     ClientPi-->>User: Lift arrived at floor 5
 ```
 
-## Component Interaction Overview
+## Component Interaction Overview (Block Diagram)
 
 ```mermaid
 graph TB
@@ -54,30 +54,23 @@ graph TB
         User[User]
     end
     
-    subgraph "Client Side"
-        ClientPi[Robot RMR / ESP - Runs client_example.py]
-    end
-    
-    subgraph "Network Subgraph"
-        Network[WiFi/Ethernet<br/>TCP/IP]
+    subgraph "Robot Side"
+        RobotRMR[Robot RMR (ESP)<br/>WiFi router & LoRa device<br/>Port 5000]
+        RobotMainController[Robot Main Controller<br/>Polls for commands]
+        RobotCamera[Robot Camera<br/>Raspberry Pi<br/>Port 5001]
     end
     
     subgraph "Lift Control Side"
-        LiftPi[Lift Control Pi<br/>Raspberry Pi #2<br/>In Lift Panel]
-        LiftService[Panel RMR - ESP <br/>app.py<br/>Port 5000]
-        LiftState[(Lift State<br/>In-Memory)]
+        PanelRMR[Panel RMR (ESP)<br/>app.py<br/>Port 5000]
+        LiftHardware[Lift Hardware<br/>Physical Mechanism<br/>Motors, Sensors]
     end
     
-    subgraph "Hardware"
-        LiftHardware[Lift Hardware<br/>Motors, Sensors<br/>Physical Mechanism]
-    end
-    
-    User -->|Commands| ClientPi
-    ClientPi <-->|HTTP REST API| Network
-    Network <-->|HTTP REST API| LiftPi
-    LiftPi --> LiftService
-    LiftService <--> LiftState
-    LiftService <-->|GPIO/Serial| LiftHardware
-    LiftHardware -->|Arrival Notification| LiftService
+    User -->|Commands| RobotRMR
+    RobotMainController <-->|WiFi<br/>GET /api/pending-command| RobotRMR
+    RobotMainController <-->|WiFi<br/>POST /api/positioned| RobotRMR
+    RobotMainController <-->|ROS or REST<br/>Position commands| RobotCamera
+    RobotRMR <-->|LoRa<br/>Floor commands| PanelRMR
+    PanelRMR <-->|Mechanical hand<br/>GPIO/Serial| LiftHardware
+    LiftHardware -->|Arrival Notification| PanelRMR
 ```
 
