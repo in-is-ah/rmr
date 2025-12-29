@@ -95,6 +95,6 @@ sequenceDiagram
     LiftService-->ClientPi: Command acknowledged
     LiftService->>LiftHardware: Click 'Door Close' button<br/>(using actuator)
     
-    Note over User,LiftHardware: Cycle Ended
+    Note over User,LiftHardware: Cycle Ends
     
 ```
